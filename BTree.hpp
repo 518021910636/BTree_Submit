@@ -21,8 +21,8 @@ namespace sjtu {
     private:
 
         // Your private members go here
-        static const int MAXN = int(4000/(8+sizeof(Key)) - 1);  /// node num max
-        static const int MAXL = int(4000/(sizeof(Value)) - 1);  /// leaf values num max
+        static const int MAXN = int(4076/(8+sizeof(Key)) - 1);  /// node num max
+        static const int MAXL = int(4076/(sizeof(Value)) - 1);  /// leaf values num max
         //static const int MINN = MAXN / 2;
         //static const int MINL = MAXL / 2;
 
@@ -100,7 +100,7 @@ namespace sjtu {
             }
         }
         inline void readFile(void *place, size_t offset, size_t n, size_t size) const{
-            if(fseek(fp, offset, SEEK_SET) != 0)  throw "open file failed";///将fp从开头开始移动指向offset位置
+            if(fseek(fp, offset, SEEK_SET) != 0)  throw "failed";///将fp从开头开始移动指向offset位置
             fread(place, size, n, fp); ///在fp处将place后面的n个大小为size的值写入
         }
         inline void writeFile(void *place, size_t offset, size_t n, size_t size){
@@ -112,7 +112,7 @@ namespace sjtu {
         FILE *oldfp;
 
         inline void copy_readFile(void *place, size_t offset, size_t n, size_t size) const{
-            if(fseek(oldfp, offset, SEEK_SET) != 0)  throw "open file failed";
+            if(fseek(oldfp, offset, SEEK_SET) != 0)  throw "failed";
             size_t ret = fread(place, n, size, oldfp);
         }
 
@@ -176,7 +176,7 @@ namespace sjtu {
             Node root;
             Leaf leaf;
             tree.size = 0;
-            tree.eof += tree_size + node_size + leaf_size;
+            tree.eof = tree_size + node_size + leaf_size;
             tree.root = root.offset = tree_size;
             tree.head = tree.rear = leaf.offset = tree_size + node_size;
             root.parent =  0;  root.type = 1;  root.num = 1;
@@ -215,9 +215,10 @@ namespace sjtu {
         pair<iterator, OperationResult>insert_leaf(Leaf &leaf, const Key &key, const Value &value){
             int pos = 0;
             for( ; pos < leaf.num; ++pos) {
+                if(key == leaf.data[pos].first)  return pair<iterator,OperationResult>(iterator,Fail);
                 if (leaf.data[pos].first > key) break;
             }
-            for(int i = leaf.num - 1; i >= pos; --i){
+            for(int i = leaf.num - 1; i >= pos; --i)
                 leaf.data[i + 1].first = leaf.data[i].first;
                 leaf.data[i + 1].second = leaf.data[i].second;
             }
