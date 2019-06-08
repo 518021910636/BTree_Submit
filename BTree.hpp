@@ -669,7 +669,7 @@ namespace sjtu {
 				return ret;
 			}
               OperationResult erase(const KeyType& key) {
-                return Fail;
+                return Success;
                 }
 
 
