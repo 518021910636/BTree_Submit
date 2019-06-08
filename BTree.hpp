@@ -224,12 +224,12 @@ namespace sjtu {
             leaf.data[pos].first = key;
             leaf.data[pos].second = value;
             ++leaf.num;  ++tree.size;
-            if(pos == 0){  ///在叶子节点的第一位插入，修改父亲的关键字值
+            /*if(pos == 0){  ///在叶子节点的第一位插入，修改父亲的关键字值
                 Node node;
                 readFile(&node, leaf.parent, 1, node_size);
                 node.key[0] = key;
                 writeFile(&node, node.offset, 1, node_size);
-            }
+            }*/
             iterator itr(this, leaf.offset, pos);
             writeFile(&tree, 0, 1, tree_size);
             if(leaf.num <= MAXL) writeFile(&leaf, leaf.offset, 1, leaf_size);
@@ -272,7 +272,7 @@ namespace sjtu {
             leaf.next = newleaf.offset;
             Leaf nextleaf;
             if(newleaf.next == 0){ tree.rear = newleaf.offset; }
-            /// 在叶子表的最后一个叶子,tree尾巴就是原来的leaf
+                /// 在叶子表的最后一个叶子,tree尾巴就是原来的leaf
             else{  ///在叶子链表中间插入
 
                 readFile(&nextleaf, newleaf.next, 1, leaf_size);
